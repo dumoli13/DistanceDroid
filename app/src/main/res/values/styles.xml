@@ -1,0 +1,19 @@
+<resources>
+
+    <style name="Widget.Theme.DistanceDroid.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="bottomSheetDialogTheme">@style/BottomSheetTheme</item>
+    </style>
+
+    <style name="Widget.Theme.DistanceDroid.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+    </style>
+
+    <style name="BottomSheetTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
+    </style>
+    <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_maroon_red</item>
+    </style>
+</resources>

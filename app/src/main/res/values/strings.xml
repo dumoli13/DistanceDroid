@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">DistanceDroid</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+    <string name="connected">Connected</string>
+    <string name="unavailable">Unavailable</string>
+
+    <string name="distance_alert_body">Watch your distance, some people is less than 2 meter from you</string>
+</resources>

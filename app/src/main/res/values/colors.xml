@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
+    <color name="light_blue_A200">#FF40C4FF</color>
+    <color name="light_blue_A400">#FF00B0FF</color>
+    <color name="black_overlay">#66000000</color>
+
+    <color name="navy_blue">#1A3953</color>
+    <color name="maroon_red">#9B2226</color>
+    <color name="powder_blue">#fffae5</color>
+    <color name="honey_dew">#F1FAEE</color>
+    <color name="yellow">#ffea00</color>
+
+    <color name="circle_red">#C92853</color>
+    <color name="circle_green">#028090</color>
+    <color name="circle_blue">#0077B6</color>
+
+    <color name="color_notification">#00000000</color>
+    <color name="notification_Bar">#b0b0b0</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="library1">#001219</color>
+    <color name="library2">#005F73</color>
+    <color name="library3">#0A9396</color>
+    <color name="library4">#94D2BD</color>
+    <color name="library5">#EE9B00</color>
+    <color name="library6">#CA6702</color>
+    <color name="library7">#BB3E03</color>
+    <color name="library8">#AE2012</color>
+    <color name="library9">#9B2226</color>
+    <color name="library10">#5f0f40</color>
+    <color name="library11">#ef476f</color>
+    <color name="library12">#fee440</color>
+    <color name="library13">#344e41</color>
+    <color name="library14">#588157</color>
+    <color name="library15">#353535</color>
+</resources>
