@@ -1,16 +1,16 @@
 package com.ridho.skripsi.model;
 
-public class CustomBluetoothDevice {
+public class NearbyBluetoothModel {
 
     String name;
     String address;
     double distance;
     int color;
 
-    public CustomBluetoothDevice() {
+    public NearbyBluetoothModel() {
     }
 
-    public CustomBluetoothDevice(String name, String address, double distance, int color) {
+    public NearbyBluetoothModel(String name, String address, double distance, int color) {
         this.name = name;
         this.address = address;
         this.distance = distance;

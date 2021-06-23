@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ridho.skripsi">
 
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -15,7 +18,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DistanceDroid">
-        <activity android:name=".view.activity.BluetoothActivity"></activity>
+        <activity android:name=".view.activity.ListPairedDevice"></activity>
+        <activity android:name=".view.activity.BluetoothChat" />
+        <activity android:name=".view.activity.BluetoothReceiveActivity" />
+        <activity android:name=".view.activity.BluetoothSendActivity" />
+        <activity android:name=".view.activity.BluetoothActivity" />
         <activity
             android:name=".view.activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

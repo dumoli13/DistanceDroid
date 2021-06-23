@@ -18,11 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.ridho.skripsi.R;
-import com.ridho.skripsi.model.CustomBluetoothDevice;
+import com.ridho.skripsi.model.NearbyBluetoothModel;
 import com.ridho.skripsi.utility.Constant;
-import com.ridho.skripsi.view.adapter.DeviceAdapter;
+import com.ridho.skripsi.view.adapter.NearbyDeviceAdapter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,8 +35,8 @@ public class DeviceBottomSheetDialog extends BottomSheetDialog {
     private RecyclerView deviceList;
 
     private BluetoothAdapter bluetoothAdapter;
-    private Map<String, CustomBluetoothDevice> deviceMap = new HashMap<>();
-    private DeviceAdapter deviceAdapter;
+    private Map<String, NearbyBluetoothModel> deviceMap = new HashMap<>();
+    private NearbyDeviceAdapter nearbyDeviceAdapter;
 
     public DeviceBottomSheetDialog(@NonNull Context context) {
         super(context);
@@ -48,10 +47,10 @@ public class DeviceBottomSheetDialog extends BottomSheetDialog {
         setContentView(view);
     }
 
-    public DeviceBottomSheetDialog(@NonNull Context context, Map<String, CustomBluetoothDevice> deviceMap) {
+    public DeviceBottomSheetDialog(@NonNull Context context, Map<String, NearbyBluetoothModel> deviceMap) {
         super(context);
         this.context = context;
-        deviceAdapter = new DeviceAdapter(deviceMap);
+        nearbyDeviceAdapter = new NearbyDeviceAdapter(deviceMap);
 
         view = getLayoutInflater().inflate(R.layout.bottom_sheet_layout, null);
 //        view.setBackgroundResource(R.drawable.bg_maroon_red);
@@ -72,7 +71,7 @@ public class DeviceBottomSheetDialog extends BottomSheetDialog {
         });
         deviceList = findViewById(R.id.rv_devices);
         deviceList.setLayoutManager(new LinearLayoutManager(getContext()));
-        deviceList.setAdapter(deviceAdapter);
+        deviceList.setAdapter(nearbyDeviceAdapter);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if(bluetoothAdapter.isDiscovering()) bluetoothAdapter.cancelDiscovery();
@@ -98,14 +97,14 @@ public class DeviceBottomSheetDialog extends BottomSheetDialog {
             if(action.equals(BluetoothDevice.ACTION_FOUND)){
                 int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI,Short.MIN_VALUE);
                 double distance = calcBleDistance(rssi);
-                deviceMap.put(device.getName(), new CustomBluetoothDevice(device.getName(), device.getAddress(), distance, Constant.COLOR_LIBRARY[deviceMap.size()%Constant.COLOR_LIBRARY.length]));
+                deviceMap.put(device.getName(), new NearbyBluetoothModel(device.getName(), device.getAddress(), distance, Constant.COLOR_LIBRARY[deviceMap.size()%Constant.COLOR_LIBRARY.length]));
 
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 Log.d(TAG, "refreshDeviceList: start discovery");
                 deviceMap.clear();
                 bluetoothAdapter.startDiscovery();
             }
-            deviceAdapter.updateList(deviceMap);
+            nearbyDeviceAdapter.updateList(deviceMap);
         }
     };
 

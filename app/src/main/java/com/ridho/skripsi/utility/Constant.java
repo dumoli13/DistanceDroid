@@ -25,6 +25,18 @@ public class Constant {
     public static final int STATE_CONNECTION_FAILED=4;
     public static final int STATE_MESSAGE_RECEIVED=5;
 
+    public static final String EXTRA_DEVICE_NAME = "EXTRA_DEVICE_NAME";
+    public static final String EXTRA_DEVICE_ADDRESS = "EXTRA_DEVICE_ADDRESS";
+
+
+    public static final int MESSAGE_STATE_CHANGED = 100;
+    public static final int MESSAGE_READ = 101;
+    public static final int MESSAGE_WRITE = 102;
+    public static final int MESSAGE_DEVICE_NAME = 103;
+    public static final int MESSAGE_TOAST = 104;
+    public static final String TOAST = "toast";
+    public static final String DEVICE_NAME = "device_name";
+
     public static final int[] COLOR_LIBRARY = {
             R.color.library1,
             R.color.library2,
