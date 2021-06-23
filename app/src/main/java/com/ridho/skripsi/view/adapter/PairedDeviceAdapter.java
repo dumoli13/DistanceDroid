@@ -1,32 +1,34 @@
 package com.ridho.skripsi.view.adapter;
 
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ridho.skripsi.R;
-import com.ridho.skripsi.model.CustomBluetoothDevice;
+import com.ridho.skripsi.model.PairedBluetoothModel;
+import com.ridho.skripsi.view.ViewCallback.ListPairedDeviceViewCallback;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class NearbyDeviceAdapter extends RecyclerView.Adapter<NearbyDeviceAdapter.MenuViewHolder> {
+public class PairedDeviceAdapter extends RecyclerView.Adapter<PairedDeviceAdapter.MenuViewHolder> {
     private static final String TAG = "DOMS";
-    private Map<String, CustomBluetoothDevice> deviceMap = new HashMap<>();
+    private Map<String, PairedBluetoothModel> deviceMap = new HashMap<>();
+    private ListPairedDeviceViewCallback callback;
 
-    public NearbyDeviceAdapter(Map<String, CustomBluetoothDevice> newmapDevice){
-        deviceMap.putAll(newmapDevice);
-        Log.d(TAG, "DeviceAdapter: mapDevice.size() " + deviceMap.size());
+    public PairedDeviceAdapter(ListPairedDeviceViewCallback callback){
+        this.callback = callback;
     }
 
-    public void updateList(Map<String, CustomBluetoothDevice> newMapDevice){
+    public void updateList(Map<String, PairedBluetoothModel> newMapDevice){
         deviceMap.clear();
         deviceMap.putAll(newMapDevice);
 
@@ -35,25 +37,25 @@ public class NearbyDeviceAdapter extends RecyclerView.Adapter<NearbyDeviceAdapte
 
     @NonNull
     @Override
-    public NearbyDeviceAdapter.MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_device_detail, parent, false);
+    public PairedDeviceAdapter.MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_paired_device, parent, false);
         return new MenuViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NearbyDeviceAdapter.MenuViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PairedDeviceAdapter.MenuViewHolder holder, int position) {
         String[] keys = deviceMap.keySet().toArray(new String[0]);
-        double distance = deviceMap.get(keys[position]).getDistance();
-        String color = distance < 1 ? "#9B2226" :
-                        distance < 2 ? "#C92853" :
-                        distance < 3 ? "#0077B6" :
-                        distance < 4 ? "#028090" : "#000000";
-
-        holder.itemColor.setBackgroundResource(deviceMap.get(keys[position]).getColor());
         holder.tvName.setText(deviceMap.get(keys[position]).getName());
-        holder.tvAddress.setText(deviceMap.get(keys[position]).getAddress());
-        holder.tvDistance.setText(distance + " meters");
-        holder.tvDistance.setTextColor(Color.parseColor(color));
+        holder.ivLogo.setImageResource(R.drawable.ic_desktop_logo);
+
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(v.getContext(), "connecting to " + deviceMap.get(keys[position]).getName(), Toast.LENGTH_SHORT).show();
+                callback.onItemClick(deviceMap.get(keys[position]));
+            }
+        });
+
     }
 
     @Override
@@ -64,17 +66,15 @@ public class NearbyDeviceAdapter extends RecyclerView.Adapter<NearbyDeviceAdapte
 
     static class MenuViewHolder extends RecyclerView.ViewHolder{
 
-        RelativeLayout itemColor;
+        ConstraintLayout layout;
         TextView tvName;
-        TextView tvAddress;
-        TextView tvDistance;
+        ImageView ivLogo;
 
         public MenuViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemColor = itemView.findViewById(R.id.item_color);
+            layout = itemView.findViewById(R.id.layout_device);
             tvName = itemView.findViewById(R.id.tv_name);
-            tvAddress = itemView.findViewById(R.id.tv_address);
-            tvDistance = itemView.findViewById(R.id.tv_distance);
+            ivLogo = itemView.findViewById(R.id.item_logo);
         }
     }
 }

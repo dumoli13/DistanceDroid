@@ -12,21 +12,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ridho.skripsi.R;
-import com.ridho.skripsi.model.CustomBluetoothDevice;
+import com.ridho.skripsi.model.NearbyBluetoothModel;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.MenuViewHolder> {
+public class NearbyDeviceAdapter extends RecyclerView.Adapter<NearbyDeviceAdapter.MenuViewHolder> {
     private static final String TAG = "DOMS";
-    private Map<String, CustomBluetoothDevice> deviceMap = new HashMap<>();
+    private Map<String, NearbyBluetoothModel> deviceMap = new HashMap<>();
 
-    public DeviceAdapter(Map<String, CustomBluetoothDevice> newmapDevice){
+    public NearbyDeviceAdapter(Map<String, NearbyBluetoothModel> newmapDevice){
         deviceMap.putAll(newmapDevice);
         Log.d(TAG, "DeviceAdapter: mapDevice.size() " + deviceMap.size());
     }
 
-    public void updateList(Map<String, CustomBluetoothDevice> newMapDevice){
+    public void updateList(Map<String, NearbyBluetoothModel> newMapDevice){
         deviceMap.clear();
         deviceMap.putAll(newMapDevice);
 
@@ -35,13 +35,13 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.MenuViewHo
 
     @NonNull
     @Override
-    public DeviceAdapter.MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public NearbyDeviceAdapter.MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_device_detail, parent, false);
         return new MenuViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DeviceAdapter.MenuViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull NearbyDeviceAdapter.MenuViewHolder holder, int position) {
         String[] keys = deviceMap.keySet().toArray(new String[0]);
         double distance = deviceMap.get(keys[position]).getDistance();
         String color = distance < 1 ? "#9B2226" :
