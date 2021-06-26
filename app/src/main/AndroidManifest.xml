@@ -18,8 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DistanceDroid">
-        <activity android:name=".view.activity.ListPairedDevice"></activity>
-        <activity android:name=".view.activity.BluetoothChat" />
+        <activity android:name=".view.activity.ListPairedDevice" />
         <activity android:name=".view.activity.BluetoothReceiveActivity" />
         <activity android:name=".view.activity.BluetoothSendActivity" />
         <activity android:name=".view.activity.BluetoothActivity" />

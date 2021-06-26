@@ -8,16 +8,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
-
-import com.ridho.skripsi.view.activity.BluetoothChat;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
-public class BluetoothUtil {
+public class BluetoothUtil implements Parcelable {
     private static final String TAG = "DOMS BluetoothUtil";
     public static final int STATE_NONE = 0;
     public static final int STATE_LISTEN = 1;
@@ -25,7 +25,7 @@ public class BluetoothUtil {
     public static final int STATE_CONNECTED = 3;
 
     private final UUID APP_UUID = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
-    private final String APP_NAME = "DistanceDroid";
+    private String APP_NAME = "DistanceDroid";
 
     private Context context;
     private Handler handler;
@@ -43,54 +43,72 @@ public class BluetoothUtil {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
+    protected BluetoothUtil(Parcel in) {
+        APP_NAME = in.readString();
+        state = in.readInt();
+    }
+
+    public static final Creator<BluetoothUtil> CREATOR = new Creator<BluetoothUtil>() {
+        @Override
+        public BluetoothUtil createFromParcel(Parcel in) {
+            return new BluetoothUtil(in);
+        }
+
+        @Override
+        public BluetoothUtil[] newArray(int size) {
+            return new BluetoothUtil[size];
+        }
+    };
+
     public int getState() {
         return state;
     }
 
     public synchronized void setState(int state) {
         this.state = state;
+        handler.obtainMessage(Constant.MESSAGE_STATE_CHANGED, state, -1).sendToTarget();
     }
 
     private synchronized void start(){
-        if(connectThread != null){
+        if (connectThread != null) {
             connectThread.cancel();
             connectThread = null;
         }
 
-        if(acceptThread == null){
+        if (acceptThread == null) {
             acceptThread = new AcceptThread();
             acceptThread.start();
         }
 
-        if(connectedThread != null){
+        if (connectedThread != null) {
             connectedThread.cancel();
             connectedThread = null;
         }
 
         setState(STATE_LISTEN);
+        Log.d(TAG, "start: STATE Status " + getState());
     }
 
     public synchronized void stop(){
-
-        if(connectThread != null){
+        if (connectThread != null) {
             connectThread.cancel();
             connectThread = null;
         }
-
-        if(acceptThread != null){
+        if (acceptThread != null) {
             acceptThread.cancel();
             acceptThread = null;
         }
 
-        if(connectedThread != null){
+        if (connectedThread != null) {
             connectedThread.cancel();
             connectedThread = null;
         }
         setState(STATE_NONE);
+        Log.d(TAG, "stop: STATE Status " + getState());
     }
 
     public void connect(BluetoothDevice device){
-        if(state == STATE_CONNECTING){
+        if (state == STATE_CONNECTING) {
             connectThread.cancel();
             connectThread = null;
         }
@@ -98,17 +116,19 @@ public class BluetoothUtil {
         connectThread = new ConnectThread(device);
         connectThread.start();
 
-        if(connectedThread != null){
+        if (connectedThread != null) {
             connectedThread.cancel();
-            connectThread = null;
+            connectedThread = null;
         }
 
         setState(STATE_CONNECTING);
+        Log.d(TAG, "connect: STATE Status " + getState());
     }
 
     public void write(byte[] buffer){
         ConnectedThread thread;
         synchronized (this){
+            Log.d(TAG, "write: STATE status" + state);
             if(state != STATE_CONNECTED){
                 return;
             }
@@ -116,6 +136,17 @@ public class BluetoothUtil {
             thread = connectedThread;
         }
         thread.write(buffer);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(APP_NAME);
+        dest.writeInt(state);
     }
 
     private class AcceptThread extends Thread{
@@ -145,6 +176,7 @@ public class BluetoothUtil {
             }
 
             if (socket != null) {
+                Log.d(TAG, "run: AcceptThread " + state);
                 switch (state) {
                     case STATE_LISTEN:
                     case STATE_CONNECTING:
@@ -193,11 +225,11 @@ public class BluetoothUtil {
             try {
                 socket.connect();
             } catch (IOException e) {
-                Log.e("Connect->Run", e.toString());
+                Log.e(TAG, "Connect->Run " + e.toString());
                 try {
                     socket.close();
                 } catch (IOException e1) {
-                    Log.e("Connect->CloseSocket", e.toString());
+                    Log.e(TAG, "Connect->CloseSocket " + e.toString());
                 }
                 connectionFailed();
                 return;
@@ -214,7 +246,7 @@ public class BluetoothUtil {
             try {
                 socket.close();
             } catch (IOException e) {
-                Log.e("Connect->Cancel", e.toString());
+                Log.e(TAG, "Connect->Cancel " + e.toString());
             }
         }
     }
@@ -232,8 +264,14 @@ public class BluetoothUtil {
 
             try {
                 tmpIn = socket.getInputStream();
+            } catch (IOException e) {
+                Log.e(TAG, "Error occurred when creating input stream", e);
+            }
+
+            try {
                 tmpOut = socket.getOutputStream();
             } catch (IOException e) {
+                Log.e(TAG, "Error occurred when creating output stream", e);
             }
 
             inputStream = tmpIn;
@@ -244,13 +282,17 @@ public class BluetoothUtil {
             byte[] buffer = new byte[1024];
             int bytes;
 
-            try {
-                bytes = inputStream.read(buffer);
+            while(true){
+                try {
+                    bytes = inputStream.read(buffer);
 
-                handler.obtainMessage(Constant.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
-            } catch (IOException e) {
-                connectionLost();
+                    handler.obtainMessage(Constant.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+                } catch (IOException e) {
+                    Log.e(TAG, "Input stream was disconnected: " + e);
+                    break;
+                }
             }
+
         }
 
         public void write(byte[] buffer) {
@@ -258,7 +300,9 @@ public class BluetoothUtil {
                 outputStream.write(buffer);
                 handler.obtainMessage(Constant.MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
             } catch (IOException e) {
-
+                // Send a failure message back to the activity.
+                Log.e(TAG, "Error occurred when sending data: ", e);
+                connectionLost("Couldn't send data to the other device");
             }
         }
 
@@ -266,15 +310,15 @@ public class BluetoothUtil {
             try {
                 socket.close();
             } catch (IOException e) {
-
+                Log.e(TAG, "cancel: " + e );
             }
         }
     }
 
-    private void connectionLost(){
+    private void connectionLost(String error){
         Message message = handler.obtainMessage(Constant.MESSAGE_TOAST);
         Bundle bundle = new Bundle();
-        bundle.putString(Constant.TOAST, "Can't connect to the device");
+        bundle.putString(Constant.TOAST, error);
         message.setData(bundle);
         handler.sendMessage(message);
 
@@ -312,5 +356,6 @@ public class BluetoothUtil {
         handler.sendMessage(message);
 
         setState(STATE_CONNECTED);
+        Log.d(TAG, "connected: STATE Status " + getState());
     }
 }
