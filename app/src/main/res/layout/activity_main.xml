@@ -9,7 +9,6 @@
     tools:context=".view.activity.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:visibility="gone"
         android:id="@+id/layout_top_off"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -49,7 +48,7 @@
             android:textColor="@color/white"
             android:textFontWeight="500"
             android:textSize="14dp"
-            android:text="Dalam upaya mencegah dampak\nvirus corona, kita harus memantau\nkesehatan terutama saturasi oksigen,\ndetak jantuk, dan menjaga jarak"/>
+            android:text="@string/ble_off_message"/>
         <TextView
             android:id="@+id/tv_intro2"
             android:layout_width="wrap_content"
@@ -63,7 +62,7 @@
             android:textColor="@color/white"
             android:textFontWeight="500"
             android:textSize="14dp"
-            android:text="Seems like your bluetooth is turned off"/>
+            android:text="@string/bluetooth_off_desc2"/>
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -89,7 +88,7 @@
             android:textColor="@color/white"
             android:textFontWeight="700"
             android:textSize="16dp"
-            android:text="To use this application,\nyou need to activate Bluetooth"/>
+            android:text="@string/bluetooth_off_desc3"/>
         <ImageView
             android:id="@+id/iv_bluetooth_switch2"
             android:layout_width="100dp"
@@ -101,6 +100,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="gone"
         android:id="@+id/layout_top_on"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -235,7 +235,7 @@
             android:fontFamily="@font/montserrat_family"
             android:textFontWeight="400"
             android:textSize="24dp"
-            android:text="DistanceDroid"/>
+            android:text="@string/app_name"/>
         <LinearLayout
             android:id="@+id/layout_ble_count"
             android:layout_width="wrap_content"
@@ -266,7 +266,7 @@
                 android:fontFamily="@font/montserrat_family"
                 android:textFontWeight="400"
                 android:textSize="12dp"
-                android:text="device detected"/>
+                android:text="@string/device_detected"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -329,7 +329,7 @@
                         android:fontFamily="@font/montserrat_family"
                         android:textFontWeight="600"
                         android:textSize="12dp"
-                        android:text="Bluetooth"/>
+                        android:text="@string/bluetooth"/>
                     <TextView
                         android:id="@+id/tv_bluetooth_description"
                         android:layout_width="wrap_content"
@@ -337,7 +337,7 @@
                         android:fontFamily="@font/montserrat_family"
                         android:textColor="@color/black_overlay"
                         android:textSize="10dp"
-                        android:text="Connected"/>
+                        android:text="@string/connected"/>
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
             z<ImageView
@@ -373,7 +373,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:padding="12dp"
                 android:textColor="@color/black"
-                android:text="Connect to device"/>
+                android:text="@string/connect_to_device"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -421,7 +421,7 @@
                         android:fontFamily="@font/montserrat_family"
                         android:textFontWeight="600"
                         android:textSize="12dp"
-                        android:text="Saturation"/>
+                        android:text="@string/saturation"/>
                     <TextView
                         android:id="@+id/tv_saturation_description"
                         android:layout_width="wrap_content"
@@ -429,7 +429,7 @@
                         android:fontFamily="@font/montserrat_family"
                         android:textColor="@color/black_overlay"
                         android:textSize="10dp"
-                        android:text="SpO2"/>
+                        android:text="@string/sp02"/>
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -441,18 +441,19 @@
                 app:layout_constraintTop_toBottomOf="@id/layout_saturation_inside_top"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:background="@drawable/bg_round_grey">
+
                 <TextView
                     android:id="@+id/tv_saturation_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_family"
+                    android:text="@string/unavailable"
+                    android:textColor="@color/black"
+                    android:textFontWeight="600"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:fontFamily="@font/montserrat_family"
-                    android:textFontWeight="700"
-                    android:textColor="@color/black"
-                    android:text="@string/unavailable"/>
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -499,7 +500,7 @@
                         android:fontFamily="@font/montserrat_family"
                         android:textFontWeight="600"
                         android:textSize="12dp"
-                        android:text="Heart Beat"/>
+                        android:text="@string/heartbeat"/>
                     <TextView
                         android:id="@+id/tv_heartbeat_description"
                         android:layout_width="wrap_content"
@@ -507,7 +508,7 @@
                         android:fontFamily="@font/montserrat_family"
                         android:textColor="@color/black_overlay"
                         android:textSize="10dp"
-                        android:text="bpm"/>
+                        android:text="@string/bpm"/>
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -528,7 +529,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:fontFamily="@font/montserrat_family"
-                    android:textFontWeight="700"
+                    android:textFontWeight="600"
                     android:textColor="@color/black"
                     android:text="@string/unavailable"/>
             </androidx.constraintlayout.widget.ConstraintLayout>

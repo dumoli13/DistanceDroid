@@ -4,8 +4,34 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="on">ON</string>
     <string name="off">OFF</string>
+    <string name="ok">OK</string>
+    <string name="exit">EXIT</string>
+    <string name="open_setting">OPEN SETTING</string>
+    <string name="name">name</string>
+    <string name="address">address</string>
+    <string name="distance">distance</string>
+    <string name="bluetooth">Bluetooth</string>
+
+    <string name="unavailable">unavailable</string>
     <string name="connected">Connected</string>
-    <string name="unavailable">Unavailable</string>
+    <string name="connecting">Connecting…</string>
+    <string name="not_connected">Not Connected</string>
+    <string name="device_detected">device detected</string>
+    <string name="connect_to_device">Connect to device</string>
+    <string name="saturation">Saturation</string>
+    <string name="heartbeat">Heart Beat</string>
+    <string name="sp02">SpO2</string>
+    <string name="bpm">bpm</string>
 
     <string name="distance_alert_body">Watch your distance, some people is less than 2 meter from you</string>
+    <string name="ble_off_message">In an effort to prevent the impact\nof the corona virus, we must\nmonitor health, especially oxygen\nsaturation, heart rate, and\nmaintain distance</string>
+    <string name="bluetooth_list_desc">Make sure the device you want to connect to is in pairing mode.</string>
+    <string name="list_paired_device">List of paired devices:</string>
+    <string name="nearby_device">Nearby devices…</string>
+    <string name="alert_title">Something went wrong</string>
+    <string name="alert_description">error message description</string>
+    <string name="permission_alert_desc">To be able to discover the device:\n\n1. Allow DistanceDroid to access the device location from popup\n2. Open the settings, select permissions, and ALLOW the location</string>
+    <string name="bluetooth_off_desc1">Turn on Bluetooth to connect to nearby devices</string>
+    <string name="bluetooth_off_desc2">Seems like your bluetooth is turned off/string>
+    <string name="bluetooth_off_desc3">To use this application,\nyou need to activate Bluetooth</string>
 </resources>

@@ -44,7 +44,7 @@
         android:fontFamily="@font/montserrat_family"
         android:textFontWeight="600"
         android:textSize="16dp"
-        android:text="Something went wrong"/>
+        android:text="@string/alert_title"/>
 
     <TextView
         android:id="@+id/tv_message_description"
@@ -59,7 +59,7 @@
         android:fontFamily="@font/montserrat_family"
         android:textFontWeight="400"
         android:textSize="14dp"
-        android:text="error message description"/>
+        android:text="@string/alert_description"/>
 
     <ImageView
         android:id="@+id/iv_border"
@@ -90,7 +90,7 @@
             android:fontFamily="@font/montserrat_family"
             android:textColor="@color/white"
             android:layout_centerInParent="true"
-            android:text="OK"
+            android:text="@string/ok"
             android:textFontWeight="400"
             android:textSize="12dp"/>
     </RelativeLayout>

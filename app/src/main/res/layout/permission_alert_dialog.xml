@@ -31,7 +31,7 @@
         android:fontFamily="@font/montserrat_family"
         android:textFontWeight="400"
         android:textSize="14dp"
-        android:text="To be able to discover the device:\n\n1. Allow DistanceDroid to access the device location from popup\n2. Open the settings, select permissions, and ALLOW the location"/>
+        android:text="@string/permission_alert_desc"/>
 
     <RelativeLayout
         android:id="@+id/btn_open_setting"
@@ -52,7 +52,7 @@
             android:fontFamily="@font/montserrat_family"
             android:textColor="@color/black"
             android:layout_centerInParent="true"
-            android:text="OPEN SETTING"
+            android:text="@string/open_setting"
             android:textFontWeight="400"
             android:textSize="12dp"/>
     </RelativeLayout>
@@ -77,7 +77,7 @@
             android:fontFamily="@font/montserrat_family"
             android:textColor="@color/black"
             android:layout_centerInParent="true"
-            android:text="EXIT"
+            android:text="@string/exit"
             android:textFontWeight="400"
             android:textSize="12dp"/>
     </RelativeLayout>

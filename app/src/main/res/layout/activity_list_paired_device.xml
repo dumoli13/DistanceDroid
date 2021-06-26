@@ -26,7 +26,7 @@
             android:fontFamily="@font/montserrat_family"
             android:textFontWeight="600"
             android:textSize="16dp"
-            android:text="On"
+            android:text="@string/on"
             android:textColor="@color/white"/>
         <ImageView
             android:id="@+id/iv_bluetooth_switch"
@@ -53,7 +53,7 @@
             android:padding="16dp"
             android:fontFamily="@font/montserrat_family"
             android:textSize="16dp"
-            android:text="Make sure the device you want to connect to is in pairing mode."/>
+            android:text="@string/bluetooth_list_desc"/>
 
         <TextView
             android:id="@+id/tv_description2"
@@ -64,7 +64,7 @@
             android:padding="16dp"
             android:fontFamily="@font/montserrat_family"
             android:textSize="16dp"
-            android:text="List of paired devices:"/>
+            android:text="@string/list_paired_device"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_paired_device"
@@ -91,7 +91,7 @@
             android:padding="16dp"
             android:fontFamily="@font/montserrat_family"
             android:textSize="16dp"
-            android:text="Turn on Bluetooth to connect to nearby devices"/>
+            android:text="@string/bluetooth_off_desc1"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

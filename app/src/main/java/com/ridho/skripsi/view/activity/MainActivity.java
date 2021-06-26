@@ -1,16 +1,13 @@
 package com.ridho.skripsi.view.activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.constraintlayout.widget.Guideline;
 
-import android.bluetooth.BluetoothA2dp;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -36,7 +33,6 @@ import com.ridho.skripsi.utility.UserNotificationManager;
 import com.ridho.skripsi.view.dialog.DeviceBottomSheetDialog;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.ridho.skripsi.utility.Commons.calcBleDistance;
@@ -51,36 +47,18 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "DOMS MainActivity";
     private static final int pairedDeviceRequestCode = 100;
 
-    private static MainActivity instance;
-
-    private ConstraintLayout layoutTopOn;
-    private ConstraintLayout layoutTopOff;
-    private ConstraintLayout layoutBottom;
-    private ConstraintLayout layoutForRadius;
-    private ConstraintLayout layoutGetPaired;
-    private ConstraintLayout layoutSaturation;
-    private ConstraintLayout layoutHeartBeat;
-
-    private TextView tvBluetoothDescription;
-    private TextView tvMainTitle;
-    private TextView tvSaturationValue;
-    private TextView tvHeartbeatValue;
 
     private LinearLayout layoutBleCount;
-    private TextView tvBleCount;
+    private ConstraintLayout layoutTopOn,layoutTopOff, layoutBottom, layoutForRadius, layoutGetPaired, layoutSaturation, layoutHeartBeat;
+    private TextView tvBluetoothDescription, tvMainTitle, tvSaturationValue, tvHeartbeatValue, tvBleCount;
+    private ImageView ivBluetoothSwitch1, ivBluetoothSwitch2;
+    private DeviceBottomSheetDialog deviceBottomSheetDialog;
 
-    private ImageView ivCenter;
-
-    private ImageView ivBluetoothSwitch1;
-    private ImageView ivBluetoothSwitch2;
-
+    private static MainActivity instance;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothUtil bluetoothUtil;
     private Map<String, NearbyBluetoothModel> deviceMap = new HashMap<>();
     private PairedBluetoothModel pairedBluetoothModel;
-
-    private DeviceBottomSheetDialog deviceBottomSheetDialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,23 +84,14 @@ public class MainActivity extends AppCompatActivity {
         layoutHeartBeat = findViewById(R.id.layout_heartbeat);
 
         tvBluetoothDescription = findViewById(R.id.tv_bluetooth_description);
-
         tvMainTitle = findViewById(R.id.tv_title);
-        tvMainTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, BluetoothChat.class);
-                MainActivity.this.startActivity(intent);
-            }
-        });
-
 
         tvSaturationValue = findViewById(R.id.tv_saturation_value);
         tvSaturationValue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, BluetoothSendActivity.class);
-                MainActivity.this.startActivity(intent);
+                String message = "spo2:" + System.currentTimeMillis();
+                bluetoothUtil.write(message.getBytes());
             }
         });
 
@@ -130,16 +99,14 @@ public class MainActivity extends AppCompatActivity {
         tvHeartbeatValue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, BluetoothActivity.class);
-                MainActivity.this.startActivity(intent);
+                String message = "bpm:"+ System.currentTimeMillis();
+                bluetoothUtil.write(message.getBytes());
             }
         });
 
         layoutBleCount = findViewById(R.id.layout_ble_count);
         layoutBleCount.setOnClickListener(bluetoothCountClickListener);
         tvBleCount = findViewById(R.id.tv_ble_count);
-
-        ivCenter = findViewById(R.id.iv_center);
 
         ivBluetoothSwitch1 = findViewById(R.id.iv_bluetooth_switch1);
         ivBluetoothSwitch1.setOnClickListener(bluetoothSwitchClickListener);
@@ -155,54 +122,7 @@ public class MainActivity extends AppCompatActivity {
             showMainMenu(false);
         } else{
             showMainMenu(true);
-
-            BluetoothProfile.ServiceListener mProfileListener = new BluetoothProfile.ServiceListener() {
-                public void onServiceConnected(int profile, BluetoothProfile proxy) {
-                    if (profile == BluetoothProfile.A2DP) {
-                        boolean deviceConnected = false;
-                        String deviceName = "";
-                        BluetoothA2dp btA2dp = (BluetoothA2dp) proxy;
-                        List<BluetoothDevice> a2dpConnectedDevices = btA2dp.getConnectedDevices();
-                        if (a2dpConnectedDevices.size() != 0) {
-                            for (BluetoothDevice device : a2dpConnectedDevices) {
-                                Log.d(TAG, "onServiceConnected: " + device.getName());
-                                if (device.getName().contains("WI-C310")) {
-                                    deviceConnected = true;
-                                    deviceName = device.getName();
-                                }
-                            }
-                        }
-                        if (!deviceConnected) {
-                            Toast.makeText(getApplicationContext(), "DEVICE NOT CONNECTED", Toast.LENGTH_SHORT).show();
-                        }
-                        if (deviceConnected) {
-                            Toast.makeText(getApplicationContext(), "DEVICE CONNECTED TO " + deviceName, Toast.LENGTH_SHORT).show();
-                        }
-                        bluetoothAdapter.closeProfileProxy(BluetoothProfile.A2DP, btA2dp);
-                    }
-                }
-
-                public void onServiceDisconnected(int profile) {
-                    // TODO
-                }
-            };
-            bluetoothAdapter.getProfileProxy(getApplicationContext(), mProfileListener, BluetoothProfile.A2DP);
-
         }
-
-//        BluetoothLeScanner scanner = bluetoothAdapter.getBluetoothLeScanner();
-//        scanner.startScan(new ScanCallback() {
-//            @RequiresApi(api = Build.VERSION_CODES.O)
-//            @Override
-//            public void onScanResult(int callbackType, ScanResult result) {
-//                super.onScanResult(callbackType, result);
-//                Log.d(TAG, "onScanResult: BluetoothLeScanner getDevice name " + result.getDevice().getName());
-//                Log.d(TAG, "onScanResult: BluetoothLeScanner getDevice address " + result.getDevice().getAddress());
-//                Log.d(TAG, "onScanResult: BluetoothLeScanner getRssi " + result.getRssi());
-//                Log.d(TAG, "onScanResult: BluetoothLeScanner getTxPower " + result.getTxPower());
-//                Log.d(TAG, "-----------------------------------------------------------------------");
-//            }
-//        });
 
         setupBluetoothBroadcast();
         bluetoothUtil = new BluetoothUtil(this, handler);
@@ -217,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(bluetoothUtil != null) bluetoothUtil.stop();
 
         unregisterReceiver(bluetoothBroadcastReceiver);
         unregisterReceiver(bluetoothDiscoveryBrodcastReceiver);
@@ -230,6 +151,8 @@ public class MainActivity extends AppCompatActivity {
             pairedBluetoothModel = new PairedBluetoothModel(data.getStringExtra(Constant.EXTRA_DEVICE_NAME), data.getStringExtra(Constant.EXTRA_DEVICE_ADDRESS));
 
             bluetoothUtil.connect(bluetoothAdapter.getRemoteDevice(pairedBluetoothModel.getAddress()));
+            tvSaturationValue.setText(getString(R.string.unavailable));
+            tvHeartbeatValue.setText(getString(R.string.unavailable));
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -286,6 +209,12 @@ public class MainActivity extends AppCompatActivity {
                 bluetoothAdapter.disable();
             } else {
                 bluetoothAdapter.enable();
+
+                if (bluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+                    Intent discoveryIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                    discoveryIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+                    startActivity(discoveryIntent);
+                }
             }
         }
     };
@@ -309,26 +238,30 @@ public class MainActivity extends AppCompatActivity {
             final String action = intent.getAction();
             BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
-            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
-                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-                switch(state) {
-                    case BluetoothAdapter.STATE_ON:
-                        Log.d(TAG, "onReceive: bluetooth status: STATE_ON");
-                        showMainMenu(true);
-                        break;
-                    case BluetoothAdapter.STATE_OFF:
-                        Log.d(TAG, "onReceive: bluetooth status: STATE_OFF");
-                        showMainMenu(false);
-                        break;
-                }
-            } else if(action.equals(BluetoothDevice.ACTION_ACL_CONNECTED)){
-                Log.d(TAG, "onReceive: bluetooth status: BluetoothDevice.ACTION_ACL_CONNECTED "+ device.getName());
-                setViewBluetoothConnected();
+            switch (action) {
+                case BluetoothAdapter.ACTION_STATE_CHANGED:
+                    final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                    switch (state) {
+                        case BluetoothAdapter.STATE_ON:
+                            Log.d(TAG, "onReceive: bluetooth status: STATE_ON");
+                            showMainMenu(true);
+                            break;
+                        case BluetoothAdapter.STATE_OFF:
+                            Log.d(TAG, "onReceive: bluetooth status: STATE_OFF");
+                            showMainMenu(false);
+                            break;
+                    }
+                    break;
+                case BluetoothDevice.ACTION_ACL_CONNECTED:
+                    Log.d(TAG, "onReceive: bluetooth status: BluetoothDevice.ACTION_ACL_CONNECTED " + device.getName());
+                    setViewBluetoothConnected();
 
-            } else if(action.equals(BluetoothDevice.ACTION_ACL_DISCONNECTED)){
-                Log.d(TAG, "onReceive: bluetooth status: BluetoothDevice.ACTION_ACL_DISCONNECTED");
-                setViewBluetoothOn();
+                    break;
+                case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                    Log.d(TAG, "onReceive: bluetooth status: BluetoothDevice.ACTION_ACL_DISCONNECTED");
+                    setViewBluetoothOn();
 
+                    break;
             }
         }
     };
@@ -432,21 +365,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private Handler handler = new Handler(new Handler.Callback() {
+    private final Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
+            Log.d(TAG, "handleMessage: " + message.what);
             switch (message.what) {
                 case MESSAGE_STATE_CHANGED:
                     switch (message.arg1) {
                         case BluetoothUtil.STATE_NONE:
                         case BluetoothUtil.STATE_LISTEN:
-                            tvBluetoothDescription.setText("Not Connected");
+                            tvBluetoothDescription.setText(getString(R.string.not_connected));
                             break;
                         case BluetoothUtil.STATE_CONNECTING:
-                            tvBluetoothDescription.setText("Connecting...");
+                            tvBluetoothDescription.setText(getString(R.string.connecting));
                             break;
                         case BluetoothUtil.STATE_CONNECTED:
-                            tvBluetoothDescription.setText("Connected");
+                            tvBluetoothDescription.setText(getString(R.string.distance_alert_body));
                             break;
                     }
                     break;
@@ -454,6 +388,14 @@ public class MainActivity extends AppCompatActivity {
                     byte[] buffer = (byte[]) message.obj;
                     String inputBuffer = new String(buffer, 0, message.arg1);
                     Log.d(TAG, "MainActivity handleMessage: MESSAGE_READ " + inputBuffer);
+                    String[] result = inputBuffer.split(":");
+                    if(result[0].equals("spo2")) tvSaturationValue.setText(result[1]);
+                    else if(result[0].equals("bpm")) tvHeartbeatValue.setText(result[1]);
+                    break;
+                case MESSAGE_WRITE:
+                    byte[] buffer1 = (byte[]) message.obj;
+                    String outputBuffer = new String(buffer1);
+                    Log.d(TAG, "handleMessage: MESSAGE_WRITE " + outputBuffer);
                     break;
                 case MESSAGE_DEVICE_NAME:
                     String connectedDevice = message.getData().getString(Constant.DEVICE_NAME);

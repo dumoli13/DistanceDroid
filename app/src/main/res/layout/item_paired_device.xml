@@ -30,7 +30,7 @@
         android:fontFamily="@font/montserrat_family"
         android:textFontWeight="600"
         android:textSize="14dp"
-        android:text="name"/>
+        android:text="@string/name"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
