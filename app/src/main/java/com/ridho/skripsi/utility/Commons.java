@@ -41,7 +41,6 @@ public class Commons {
 //        else distance = pow(10, ((txPower- rssi)/(10*n))); //rssi is greater than transmission strength
         else distance = pow(10, ((txPower- rssi)/(10*n))); //rssi is greater than transmission strength
 
-        Log.d(TAG, "calcBleDistance: EXTRA_RSSI value " + rssi + ", distance: " + Math.floor(distance*100)/100);
         return Math.floor(distance*100)/100;
     }
 
