@@ -380,7 +380,7 @@ public class MainActivity extends AppCompatActivity {
                             tvBluetoothDescription.setText(getString(R.string.connecting));
                             break;
                         case BluetoothUtil.STATE_CONNECTED:
-                            tvBluetoothDescription.setText(getString(R.string.distance_alert_body));
+                            tvBluetoothDescription.setText(getString(R.string.connected));
                             break;
                     }
                     break;

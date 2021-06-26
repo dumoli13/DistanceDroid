@@ -9,6 +9,7 @@
     tools:context=".view.activity.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="gone"
         android:id="@+id/layout_top_off"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -100,7 +101,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:visibility="gone"
         android:id="@+id/layout_top_on"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -353,6 +353,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:visibility="gone"
             android:id="@+id/layout_get_paired"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -377,7 +378,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:visibility="gone"
             android:id="@+id/layout_saturation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -458,7 +458,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:visibility="gone"
             android:id="@+id/layout_heartbeat"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
