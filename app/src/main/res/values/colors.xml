@@ -29,18 +29,18 @@
     <color name="transparent">#00000000</color>
 
     <color name="library1">#001219</color>
-    <color name="library2">#005F73</color>
-    <color name="library3">#0A9396</color>
-    <color name="library4">#94D2BD</color>
-    <color name="library5">#EE9B00</color>
-    <color name="library6">#CA6702</color>
-    <color name="library7">#BB3E03</color>
-    <color name="library8">#AE2012</color>
-    <color name="library9">#9B2226</color>
-    <color name="library10">#5f0f40</color>
-    <color name="library11">#ef476f</color>
-    <color name="library12">#fee440</color>
-    <color name="library13">#344e41</color>
-    <color name="library14">#588157</color>
-    <color name="library15">#353535</color>
+    <color name="library2">#fee440</color>
+    <color name="library3">#94D2BD</color>
+    <color name="library4">#ef476f</color>
+    <color name="library5">#005F73</color>
+    <color name="library6">#9B2226</color>
+    <color name="library7">#344e41</color>
+    <color name="library8">#0A9396</color>
+    <color name="library9">#EE9B00</color>
+    <color name="library10">#AE2012</color>
+    <color name="library11">#353535</color>
+    <color name="library12">#588157</color>
+    <color name="library13">#CA6702</color>
+    <color name="library14">#BB3E03</color>
+    <color name="library15">#5f0f40</color>
 </resources>

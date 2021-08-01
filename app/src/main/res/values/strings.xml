@@ -27,6 +27,7 @@
     <string name="ble_off_message">In an effort to prevent the impact\nof the corona virus, we must\nmonitor health, especially oxygen\nsaturation, heart rate, and\nmaintain distance</string>
     <string name="bluetooth_list_desc">Make sure the device you want to connect to is in pairing mode.</string>
     <string name="list_paired_device">List of paired devices:</string>
+    <string name="list_available_device">List of available devices:</string>
     <string name="nearby_device">Nearby devices…</string>
     <string name="alert_title">Something went wrong</string>
     <string name="alert_description">error message description</string>

@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.ridho.skripsi.utility.Commons.calcBleDistance;
+import static com.ridho.skripsi.utility.Constant.BLE_MAX_DISTANCE;
 
 public class DeviceBottomSheetDialog extends BottomSheetDialog {
     private static final String TAG = "DOMS";
@@ -43,7 +44,6 @@ public class DeviceBottomSheetDialog extends BottomSheetDialog {
         this.context = context;
 
         view = getLayoutInflater().inflate(R.layout.bottom_sheet_layout, null);
-//        view.setBackgroundResource(R.drawable.bg_maroon_red);
         setContentView(view);
     }
 
@@ -53,7 +53,6 @@ public class DeviceBottomSheetDialog extends BottomSheetDialog {
         nearbyDeviceAdapter = new NearbyDeviceAdapter(deviceMap);
 
         view = getLayoutInflater().inflate(R.layout.bottom_sheet_layout, null);
-//        view.setBackgroundResource(R.drawable.bg_maroon_red);
         setContentView(view);
     }
 
@@ -76,6 +75,7 @@ public class DeviceBottomSheetDialog extends BottomSheetDialog {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if(bluetoothAdapter.isDiscovering()) bluetoothAdapter.cancelDiscovery();
         bluetoothAdapter.startDiscovery();
+
         IntentFilter discoverDeviceFilter = new IntentFilter();
         discoverDeviceFilter.addAction(BluetoothDevice.ACTION_FOUND);
         discoverDeviceFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
@@ -97,7 +97,18 @@ public class DeviceBottomSheetDialog extends BottomSheetDialog {
             if(action.equals(BluetoothDevice.ACTION_FOUND)){
                 int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI,Short.MIN_VALUE);
                 double distance = calcBleDistance(rssi);
-                deviceMap.put(device.getName(), new NearbyBluetoothModel(device.getName(), device.getAddress(), distance, Constant.COLOR_LIBRARY[deviceMap.size()%Constant.COLOR_LIBRARY.length]));
+                if(distance < BLE_MAX_DISTANCE){
+
+                    deviceMap.put(
+                            device.getAddress(),
+                            new NearbyBluetoothModel(
+                                    device.getName(),
+                                    device.getAddress(),
+                                    distance,
+                                    Constant.COLOR_LIBRARY[deviceMap.size()%Constant.COLOR_LIBRARY.length]
+                            )
+                    );
+                }
 
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 Log.d(TAG, "refreshDeviceList: start discovery");

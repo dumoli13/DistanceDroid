@@ -17,11 +17,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ridho.skripsi.R;
-import com.ridho.skripsi.model.NearbyBluetoothModel;
-import com.ridho.skripsi.model.PairedBluetoothModel;
+import com.ridho.skripsi.model.BluetoothModel;
 import com.ridho.skripsi.utility.Constant;
 import com.ridho.skripsi.view.ViewCallback.ListPairedDeviceViewCallback;
 import com.ridho.skripsi.view.adapter.PairedDeviceAdapter;
@@ -30,26 +28,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static com.ridho.skripsi.utility.Commons.calcBleDistance;
-
-public class ListPairedDevice extends AppCompatActivity implements ListPairedDeviceViewCallback {
+public class ListOfDevice extends AppCompatActivity implements ListPairedDeviceViewCallback {
 
     private static final String TAG = "DOMS ListPairedDevice";
 
     private TextView tvBluetoothStatus;
     private ImageView ivBluetoothSwitch;
-    private RecyclerView deviceList;
+    private RecyclerView pairedDeviceList;
+    private RecyclerView availableDeviceList;
     private ConstraintLayout layoutOff;
     private ConstraintLayout layoutOn;
 
-    private PairedDeviceAdapter adapter;
+    private PairedDeviceAdapter pairedDeviceAdapter;
+    private PairedDeviceAdapter availableDeviceAdapter;
     private BluetoothAdapter bluetoothAdapter;
-    private Map<String, PairedBluetoothModel> deviceMap = new HashMap<>();
+    private Map<String, BluetoothModel> pairedBluetoothMap = new HashMap<>();
+    private Map<String, BluetoothModel> nearbyBluetoothMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_paired_device);
+        setContentView(R.layout.activity_list_of_device);
 
         tvBluetoothStatus = findViewById(R.id.tv_bluetooth_status);
         ivBluetoothSwitch = findViewById(R.id.iv_bluetooth_switch);
@@ -57,11 +56,16 @@ public class ListPairedDevice extends AppCompatActivity implements ListPairedDev
         layoutOff = findViewById(R.id.layout_off);
         layoutOn = findViewById(R.id.layout_on);
 
-        adapter = new PairedDeviceAdapter(this);
 
-        deviceList = findViewById(R.id.rv_paired_device);
-        deviceList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        deviceList.setAdapter(adapter);
+        pairedDeviceList = findViewById(R.id.rv_paired_device);
+        pairedDeviceList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        pairedDeviceAdapter = new PairedDeviceAdapter(this);
+        pairedDeviceList.setAdapter(pairedDeviceAdapter);
+
+        availableDeviceList = findViewById(R.id.rv_available_device);
+        availableDeviceList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        availableDeviceAdapter = new PairedDeviceAdapter(this);
+        availableDeviceList.setAdapter(availableDeviceAdapter);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -70,6 +74,13 @@ public class ListPairedDevice extends AppCompatActivity implements ListPairedDev
         intentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
         intentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         registerReceiver(bluetoothBroadcastReceiver, intentFilter);
+
+        if(bluetoothAdapter.isDiscovering()) bluetoothAdapter.cancelDiscovery();
+        bluetoothAdapter.startDiscovery();
+        IntentFilter discoverDeviceFilter = new IntentFilter();
+        discoverDeviceFilter.addAction(BluetoothDevice.ACTION_FOUND);
+        discoverDeviceFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        registerReceiver(bluetoothDiscoveryBrodcastReceiver, discoverDeviceFilter);
     }
 
     @Override
@@ -79,9 +90,9 @@ public class ListPairedDevice extends AppCompatActivity implements ListPairedDev
 
         if (pairedDevices != null && pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
-                deviceMap.put(device.getName(), new PairedBluetoothModel(device.getName(), device.getAddress(),device.getBluetoothClass()));
+                pairedBluetoothMap.put(device.getAddress(), new BluetoothModel(device.getName(), device.getAddress(),device.getBluetoothClass()));
             }
-            adapter.updateList(deviceMap);
+            pairedDeviceAdapter.updateList(pairedBluetoothMap);
         }
     }
 
@@ -90,6 +101,7 @@ public class ListPairedDevice extends AppCompatActivity implements ListPairedDev
         super.onDestroy();
 
         unregisterReceiver(bluetoothBroadcastReceiver);
+        unregisterReceiver(bluetoothDiscoveryBrodcastReceiver);
     }
 
     View.OnClickListener bluetoothSwitchClickListener = new View.OnClickListener() {
@@ -104,13 +116,12 @@ public class ListPairedDevice extends AppCompatActivity implements ListPairedDev
     };
 
     @Override
-    public void onItemClick(PairedBluetoothModel model) {
+    public void onItemClick(BluetoothModel model) {
         Log.d(TAG, "onItemClick: " + model.getName());
-        Intent intent = new Intent();
+        Intent intent = new Intent(ListOfDevice.this, DeviceDetail.class);
         intent.putExtra(Constant.EXTRA_DEVICE_NAME, model.getName());
         intent.putExtra(Constant.EXTRA_DEVICE_ADDRESS, model.getAddress());
-        setResult(Activity.RESULT_OK, intent);
-        finish();
+        startActivity(intent);
     }
 
     private void showMainMenu(boolean isVisible){
@@ -132,8 +143,6 @@ public class ListPairedDevice extends AppCompatActivity implements ListPairedDev
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
             if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
                 final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
                 switch(state) {
@@ -147,6 +156,23 @@ public class ListPairedDevice extends AppCompatActivity implements ListPairedDev
                         break;
                 }
             }
+        }
+    };
+
+    private final BroadcastReceiver bluetoothDiscoveryBrodcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+            if(action.equals(BluetoothDevice.ACTION_FOUND)){
+                BluetoothModel nearbyBluetoothModel = new BluetoothModel(device.getName(), device.getAddress(), device.getBluetoothClass());
+                nearbyBluetoothMap.put(device.getAddress(), nearbyBluetoothModel);
+            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                nearbyBluetoothMap.clear();
+                bluetoothAdapter.startDiscovery();
+            }
+            availableDeviceAdapter.updateList(nearbyBluetoothMap);
         }
     };
 }

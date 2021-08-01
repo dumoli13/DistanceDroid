@@ -39,6 +39,7 @@ public class UserNotificationManager {
         showNotification(context, context.getString(R.string.app_name), body, pendingIntent, id);
     }
 
+    //Format: UserNotificationManager.showErrorNotification(getApplicationContext(), getString(R.string.distance_alert_body));
     private static void showNotification(Context context, String title, String body, PendingIntent pendingIntent, int uniqueID){
         NotificationManager notificationManager = context.getSystemService(android.app.NotificationManager.class);
         NotificationChannel channel = null;
@@ -64,19 +65,16 @@ public class UserNotificationManager {
         notificationManager.notify(uniqueID, notificationBuilder.build());
     }
 
+    //Format: UserNotificationManager.showErrorPermission(MainActivity.this);
     public static void showErrorPermission(Activity activity){
         PermissionAlertDialog dialog = new PermissionAlertDialog();
         dialog.setContext(activity);
         dialog.show(activity.getFragmentManager(), "showErrorPermission");
     }
-    
-    public static void showDistanceDialog(Activity activity, String flag, String[] deviceName){
-        StringBuilder message = new StringBuilder("You are too close with several device(s)\n[");
-        for(int i=0; i<deviceName.length; i++){
-            message.append(deviceName[i]);
-            if(i<deviceName.length-1) message.append(",");
-            else message.append("]");
-        }
+
+    //Format: UserNotificationManager.showDistanceDialog(MainActivity.this, Constant.ALERT_DISTANCE_WARNING, device.getName());
+    public static void showDistanceDialog(Activity activity, String flag, String deviceName){
+        StringBuilder message = new StringBuilder("You are too close with device: " + deviceName);
 
         GeneralDialog dialog = new GeneralDialog();
         dialog.setContext(activity);
@@ -84,7 +82,8 @@ public class UserNotificationManager {
         dialog.setMessage(message.toString());
         dialog.show(activity.getFragmentManager(), "showDistanceDialog");
     }
-    
+
+    //Format : UserNotificationManager.showGeneralError(MainActivity.this, Constant.ALERT_NO_BLUETOOTH_DEVICE);
     public static void showGeneralError(Activity activity, String flag){
         GeneralDialog dialog = new GeneralDialog();
         dialog.setContext(activity);

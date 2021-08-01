@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".view.activity.ListPairedDevice">
+    tools:context=".view.activity.ListOfDevice">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_on_off"
@@ -72,6 +72,25 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             app:layout_constraintTop_toBottomOf="@id/tv_description2"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <TextView
+            android:id="@+id/tv_description3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_paired_device"
+            android:padding="16dp"
+            android:fontFamily="@font/montserrat_family"
+            android:textSize="16dp"
+            android:text="@string/list_available_device"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_available_device"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_description3"
             tools:layout_editor_absoluteX="0dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

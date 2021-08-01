@@ -18,6 +18,7 @@ public class Constant {
     public static final int PERMISSION_REQUEST_CODE = 1000;
 
     //Bluetooth
+    public static final double BLE_MAX_DISTANCE = 10;
     public static final UUID BLUETOOTH_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66");
     public static final int STATE_LISTENING = 1;
     public static final int STATE_CONNECTING=2;

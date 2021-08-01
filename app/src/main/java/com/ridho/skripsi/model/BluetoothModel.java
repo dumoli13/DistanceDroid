@@ -2,21 +2,21 @@ package com.ridho.skripsi.model;
 
 import android.bluetooth.BluetoothClass;
 
-public class PairedBluetoothModel {
+public class BluetoothModel {
 
     String name;
     String address;
     BluetoothClass bluetoothClass;
 
-    public PairedBluetoothModel() {
+    public BluetoothModel() {
     }
 
-    public PairedBluetoothModel(String name, String address, BluetoothClass bluetoothClass) {
+    public BluetoothModel(String name, String address, BluetoothClass bluetoothClass) {
         this.name = name;
         this.address = address;
         this.bluetoothClass = bluetoothClass;
     }
-    public PairedBluetoothModel(String name, String address) {
+    public BluetoothModel(String name, String address) {
         this.name = name;
         this.address = address;
     }

@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 import com.ridho.skripsi.R;
 import com.ridho.skripsi.model.NearbyBluetoothModel;
-import com.ridho.skripsi.model.PairedBluetoothModel;
+import com.ridho.skripsi.model.BluetoothModel;
 import com.ridho.skripsi.utility.BluetoothUtil;
 import com.ridho.skripsi.utility.Commons;
 import com.ridho.skripsi.utility.Constant;
@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.ridho.skripsi.utility.Commons.calcBleDistance;
+import static com.ridho.skripsi.utility.Constant.BLE_MAX_DISTANCE;
 import static com.ridho.skripsi.utility.Constant.MESSAGE_DEVICE_NAME;
 import static com.ridho.skripsi.utility.Constant.MESSAGE_READ;
 import static com.ridho.skripsi.utility.Constant.MESSAGE_STATE_CHANGED;
@@ -47,10 +48,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "DOMS MainActivity";
     private static final int pairedDeviceRequestCode = 100;
 
-
     private LinearLayout layoutBleCount;
     private ConstraintLayout layoutTopOn,layoutTopOff, layoutBottom, layoutForRadius, layoutGetPaired, layoutSaturation, layoutHeartBeat;
-    private TextView tvBluetoothDescription, tvMainTitle, tvSaturationValue, tvHeartbeatValue, tvBleCount;
+    private TextView tvBluetoothDescription, tvSaturationValue, tvHeartbeatValue, tvBleCount;
     private ImageView ivBluetoothSwitch1, ivBluetoothSwitch2;
     private DeviceBottomSheetDialog deviceBottomSheetDialog;
 
@@ -58,7 +58,9 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothUtil bluetoothUtil;
     private Map<String, NearbyBluetoothModel> deviceMap = new HashMap<>();
-    private PairedBluetoothModel pairedBluetoothModel;
+    private BluetoothModel bluetoothModel;
+
+    private boolean showNotif = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,20 +73,12 @@ public class MainActivity extends AppCompatActivity {
         layoutBottom = findViewById(R.id.layout_bottom);
         layoutForRadius = findViewById(R.id.layout_for_radius);
         layoutGetPaired = findViewById(R.id.layout_get_paired);
-        layoutGetPaired.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ListPairedDevice.class);
-                MainActivity.this.startActivityForResult(intent, pairedDeviceRequestCode);
-
-            }
-        });
+        layoutGetPaired.setOnClickListener(getPairedListener);
 
         layoutSaturation = findViewById(R.id.layout_saturation);
         layoutHeartBeat = findViewById(R.id.layout_heartbeat);
 
         tvBluetoothDescription = findViewById(R.id.tv_bluetooth_description);
-        tvMainTitle = findViewById(R.id.tv_title);
 
         tvSaturationValue = findViewById(R.id.tv_saturation_value);
         tvSaturationValue.setOnClickListener(new View.OnClickListener() {
@@ -118,10 +112,10 @@ public class MainActivity extends AppCompatActivity {
         if(bluetoothAdapter == null){
             showMainMenu(false);
             UserNotificationManager.showGeneralError(this, Constant.ALERT_NO_BLUETOOTH_DEVICE);
-        } else if(!bluetoothAdapter.isEnabled()){
-            showMainMenu(false);
-        } else{
+        } else if(bluetoothAdapter.isEnabled()){
             showMainMenu(true);
+        } else{
+            showMainMenu(false);
         }
 
         setupBluetoothBroadcast();
@@ -148,11 +142,9 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == pairedDeviceRequestCode && resultCode == RESULT_OK){
             Log.d(TAG, "onActivityResult: NAME: " + data.getStringExtra(Constant.EXTRA_DEVICE_NAME));
             Log.d(TAG, "onActivityResult: ADDRESS: " + data.getStringExtra(Constant.EXTRA_DEVICE_ADDRESS));
-            pairedBluetoothModel = new PairedBluetoothModel(data.getStringExtra(Constant.EXTRA_DEVICE_NAME), data.getStringExtra(Constant.EXTRA_DEVICE_ADDRESS));
+            bluetoothModel = new BluetoothModel(data.getStringExtra(Constant.EXTRA_DEVICE_NAME), data.getStringExtra(Constant.EXTRA_DEVICE_ADDRESS));
 
-            bluetoothUtil.connect(bluetoothAdapter.getRemoteDevice(pairedBluetoothModel.getAddress()));
-            tvSaturationValue.setText(getString(R.string.unavailable));
-            tvHeartbeatValue.setText(getString(R.string.unavailable));
+            bluetoothUtil.connect(bluetoothAdapter.getRemoteDevice(bluetoothModel.getAddress()));
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -222,15 +214,21 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener bluetoothCountClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Log.d(TAG, "onClick: bluetoothCountClickListener");
-//            UserNotificationManager.showErrorNotification(getApplicationContext(), getString(R.string.distance_alert_body));
-//            UserNotificationManager.showDistanceDialog(MainActivity.this, Constant.ALERT_DISTANCE_WARNING, new String[]{"haha", "hehe", "hihi"});
-//            UserNotificationManager.showGeneralError(MainActivity.this, Constant.ALERT_NO_BLUETOOTH_DEVICE);
-
             deviceBottomSheetDialog = new DeviceBottomSheetDialog(MainActivity.this, deviceMap);
             deviceBottomSheetDialog.show();
         }
     };
+
+    View.OnClickListener getPairedListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(Commons.checkSupportBLE(MainActivity.this) && Commons.checkGpsEnable(MainActivity.this)){
+                Intent intent = new Intent(MainActivity.this, ListOfDevice.class);
+                MainActivity.this.startActivity(intent);
+            }
+        }
+    };
+
 
     private final BroadcastReceiver bluetoothBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -243,11 +241,9 @@ public class MainActivity extends AppCompatActivity {
                     final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
                     switch (state) {
                         case BluetoothAdapter.STATE_ON:
-                            Log.d(TAG, "onReceive: bluetooth status: STATE_ON");
                             showMainMenu(true);
                             break;
                         case BluetoothAdapter.STATE_OFF:
-                            Log.d(TAG, "onReceive: bluetooth status: STATE_OFF");
                             showMainMenu(false);
                             break;
                     }
@@ -260,7 +256,6 @@ public class MainActivity extends AppCompatActivity {
                 case BluetoothDevice.ACTION_ACL_DISCONNECTED:
                     Log.d(TAG, "onReceive: bluetooth status: BluetoothDevice.ACTION_ACL_DISCONNECTED");
                     setViewBluetoothOn();
-
                     break;
             }
         }
@@ -275,12 +270,20 @@ public class MainActivity extends AppCompatActivity {
             if(action.equals(BluetoothDevice.ACTION_FOUND)){
                 int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
                 double distance = calcBleDistance(rssi);
-                int i = Constant.COLOR_LIBRARY[deviceMap.size()%Constant.COLOR_LIBRARY.length];
-                NearbyBluetoothModel nearbyBluetoothModel = new NearbyBluetoothModel(device.getName(), device.getAddress(), distance, i);
-                deviceMap.put(device.getName(), nearbyBluetoothModel);
-
+                if(distance < BLE_MAX_DISTANCE){
+                    if(showNotif){
+                        showNotif = false;
+                        UserNotificationManager.showErrorNotification(getApplicationContext(), getString(R.string.distance_alert_body));
+                        UserNotificationManager.showDistanceDialog(MainActivity.this, Constant.ALERT_DISTANCE_WARNING, device.getName());
+                    }
+                    int color = Constant.COLOR_LIBRARY[deviceMap.size() % Constant.COLOR_LIBRARY.length];
+                    NearbyBluetoothModel nearbyBluetoothModel = new NearbyBluetoothModel(device.getName(), device.getAddress(), distance, color);
+                    deviceMap.put(device.getAddress(), nearbyBluetoothModel);
+                }
+                else Toast.makeText(getApplicationContext(), device.getName()+" distance= " + distance, Toast.LENGTH_SHORT).show();
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 deviceMap.clear();
+                showNotif = true;
                 layoutForRadius.removeAllViewsInLayout();
                 bluetoothAdapter.startDiscovery();
             }
@@ -296,16 +299,10 @@ public class MainActivity extends AppCompatActivity {
     private void setViewBluetoothOn(){
         tvBluetoothDescription.setText(getString(R.string.on));
         ivBluetoothSwitch1.setImageResource(R.drawable.ic_switch_on);
-        layoutGetPaired.setVisibility(View.VISIBLE);
-        layoutSaturation.setVisibility(View.GONE);
-        layoutHeartBeat.setVisibility(View.GONE);
     }
     private void setViewBluetoothConnected(){
         tvBluetoothDescription.setText(getString(R.string.connected));
         ivBluetoothSwitch1.setImageResource(R.drawable.ic_switch_on);
-        layoutGetPaired.setVisibility(View.GONE);
-        layoutSaturation.setVisibility(View.VISIBLE);
-        layoutHeartBeat.setVisibility(View.VISIBLE);
     }
 
     private void showMainMenu(boolean isVisible){
@@ -323,7 +320,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setDevice(float distance, int color){
-
         //Distance <= 0.4 meter considered stick/touch owner so, we made it touch the center's surface
         float anchor = Math.max(0.125f * distance, 0.05f);
         Guideline guidelineLeft = getNewGuideline(this, ConstraintLayout.LayoutParams.VERTICAL);
@@ -371,6 +367,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "handleMessage: " + message.what);
             switch (message.what) {
                 case MESSAGE_STATE_CHANGED:
+                    tvSaturationValue.setText(getString(R.string.unavailable));
+                    tvHeartbeatValue.setText(getString(R.string.unavailable));
                     switch (message.arg1) {
                         case BluetoothUtil.STATE_NONE:
                         case BluetoothUtil.STATE_LISTEN:

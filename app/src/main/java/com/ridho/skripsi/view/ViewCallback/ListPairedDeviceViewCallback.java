@@ -1,7 +1,7 @@
 package com.ridho.skripsi.view.ViewCallback;
 
-import com.ridho.skripsi.model.PairedBluetoothModel;
+import com.ridho.skripsi.model.BluetoothModel;
 
 public interface ListPairedDeviceViewCallback {
-    void onItemClick(PairedBluetoothModel model);
+    void onItemClick(BluetoothModel model);
 }
