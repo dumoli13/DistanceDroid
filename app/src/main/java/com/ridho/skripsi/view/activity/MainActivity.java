@@ -112,14 +112,15 @@ public class MainActivity extends AppCompatActivity {
         if(bluetoothAdapter == null){
             showMainMenu(false);
             UserNotificationManager.showGeneralError(this, Constant.ALERT_NO_BLUETOOTH_DEVICE);
-        } else if(bluetoothAdapter.isEnabled()){
-            showMainMenu(true);
-        } else{
-            showMainMenu(false);
+        } else {
+            if(bluetoothAdapter.isEnabled()){
+                showMainMenu(true);
+            } else{
+                showMainMenu(false);
+            }
+            setupBluetoothBroadcast();
+            bluetoothUtil = new BluetoothUtil(this, handler);
         }
-
-        setupBluetoothBroadcast();
-        bluetoothUtil = new BluetoothUtil(this, handler);
     }
 
     @Override
