@@ -20,12 +20,6 @@ public class Constant {
     //Bluetooth
     public static final double BLE_MAX_DISTANCE = 10;
     public static final double SHOW_NOTIF_DISTANCE = 2;
-    public static final UUID BLUETOOTH_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66");
-    public static final int STATE_LISTENING = 1;
-    public static final int STATE_CONNECTING=2;
-    public static final int STATE_CONNECTED=3;
-    public static final int STATE_CONNECTION_FAILED=4;
-    public static final int STATE_MESSAGE_RECEIVED=5;
 
     public static final String EXTRA_DEVICE_NAME = "EXTRA_DEVICE_NAME";
     public static final String EXTRA_DEVICE_ADDRESS = "EXTRA_DEVICE_ADDRESS";

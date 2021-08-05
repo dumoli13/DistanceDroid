@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PairedDeviceAdapter extends RecyclerView.Adapter<PairedDeviceAdapter.MenuViewHolder> {
-    private static final String TAG = "DOMS";
     private Map<String, BluetoothModel> pairedDeviceMap = new HashMap<>();
     private ListPairedDeviceViewCallback callback;
 
