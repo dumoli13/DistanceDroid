@@ -13,6 +13,9 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/powder_blue</item>
         <item name="android:windowLightStatusBar">true</item>
         <!-- Customize your theme here. -->
+        <item name="colorHomeBodyLayout">@color/white</item>
+        <item name="colorBodyLayout">@color/library12</item>
+        <item name="colorBodyCardLayout">@color/white</item>
     </style>
 
     <style name="Theme.DistanceDroid.Fullscreen" parent="Theme.DistanceDroid">

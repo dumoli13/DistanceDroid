@@ -13,9 +13,12 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.LeadingMarginSpan;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ridho.skripsi.R;
@@ -38,6 +41,7 @@ public class DeviceDetail extends AppCompatActivity {
     private TextView peripheralTextView;
     private TextView saturationValue;
     private TextView heartbeatValue;
+    private ImageView btnBack;
 
     // Android system class for BLE communication
     private BluetoothAdapter btAdapter;
@@ -57,8 +61,15 @@ public class DeviceDetail extends AppCompatActivity {
         heartbeatValue = findViewById(R.id.heartbeat_value);
         peripheralTextView = findViewById(R.id.PeripheralTextView);
         peripheralTextView.setMovementMethod(new ScrollingMovementMethod());
+        btnBack = findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-        Button btnClearText = findViewById(R.id.btn_clear_text);
+        ImageView btnClearText = findViewById(R.id.btn_clear_text);
         btnClearText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,14 +102,14 @@ public class DeviceDetail extends AppCompatActivity {
                 case 0:
                     DeviceDetail.this.runOnUiThread(new Runnable() {
                         public void run() {
-                            peripheralTextView.append(getTime()+" > Device disconnected\n");
+                            peripheralTextView.append(indentedText(getTime()+" > Device disconnected\n") );
                         }
                     });
                     break;
                 case 2:
                     DeviceDetail.this.runOnUiThread(new Runnable() {
                         public void run() {
-                            peripheralTextView.append(getTime()+" > Device connected\n");
+                            peripheralTextView.append(indentedText(getTime()+" > Device connected\n") );
                         }
                     });
 
@@ -109,7 +120,7 @@ public class DeviceDetail extends AppCompatActivity {
                 default:
                     DeviceDetail.this.runOnUiThread(new Runnable() {
                         public void run() {
-                            peripheralTextView.append(getTime()+" > BLE connection error\n");
+                            peripheralTextView.append(indentedText(getTime()+" > BLE connection error\n"));
                         }
                     });
                     break;
@@ -127,7 +138,7 @@ public class DeviceDetail extends AppCompatActivity {
                 DeviceDetail.this.runOnUiThread(new Runnable() {
                     public void run() {
                         if (serviceUuid.equals(SampleGattAttributes.HEART_RATE_SERVICE) || serviceUuid.equals(SampleGattAttributes.SPO_RATE_SERVICE)) {
-                            peripheralTextView.append(getTime()+" > Service disovered: "+serviceUuid+"\n");
+                            peripheralTextView.append(indentedText(getTime()+" > Service disovered: "+serviceUuid+"\n"));
                         }
                     }
                 });
@@ -162,7 +173,7 @@ public class DeviceDetail extends AppCompatActivity {
                     DeviceDetail.this.runOnUiThread(new Runnable() {
                         public void run() {
                             if (charUuid.equals(SampleGattAttributes.HEART_RATE_MEASUREMENT) || charUuid.equals(SampleGattAttributes.SPO_RATE_MEASUREMENT)) {
-                                peripheralTextView.append(getTime()+" > Characteristic discovered : "+charUuid+"\n");
+                                peripheralTextView.append(indentedText(getTime()+" > Characteristic discovered : "+charUuid+"\n"));
                             }
                         }
                     });
@@ -195,16 +206,19 @@ public class DeviceDetail extends AppCompatActivity {
                 finalData = "Heart Beat : " +data;
                 System.out.println(finalData);
                 heartbeatValue.setText(data);
+                heartbeatValue.setTextColor(getColor(R.color.library12));
             } else if (characteristic.getUuid().toString().equals(SampleGattAttributes.SPO_RATE_MEASUREMENT)) {
                 finalData = "SPO value : " +data;
                 System.out.println(finalData);
                 saturationValue.setText(data);
+                if(Integer.parseInt(data) < 95) saturationValue.setTextColor(getColor(R.color.maroon_red));
+                else saturationValue.setTextColor(getColor(R.color.library12));
             }
 
             String monitorData = finalData;
             DeviceDetail.this.runOnUiThread(new Runnable() {
                 public void run() {
-                    peripheralTextView.append(getTime()+" > "+ monitorData +"\n");
+                    peripheralTextView.append(indentedText(getTime()+" > "+ monitorData +"\n"));
                 }
             });
         }
@@ -230,13 +244,19 @@ public class DeviceDetail extends AppCompatActivity {
         nameValue.setText(btName);
         addressValue.setText(btAddress);
 
-        peripheralTextView.append(getTime()+" > Connect to device : " +btAddress+ "\n");
+        peripheralTextView.append(indentedText(getTime()+" > Connect to device : " +btAddress+ "\n"));
         BluetoothDevice btDevice = btAdapter.getRemoteDevice(btAddress);
         bluetoothGatt = btDevice.connectGatt(this, false, btleGattCallback);
     }
 
     private void disconnectDevice() {
-        peripheralTextView.append(getTime()+" > Disconnecting from device : " +addressValue.getText()+ "\n");
+        peripheralTextView.append(indentedText(getTime()+" > Disconnecting from device : " +addressValue.getText()+ "\n"));
         bluetoothGatt.disconnect();
+    }
+
+    static SpannableString indentedText(String text) {
+        SpannableString result=new SpannableString(text);
+        result.setSpan(new LeadingMarginSpan.Standard(0, 24),0,text.length(),0);
+        return result;
     }
 }

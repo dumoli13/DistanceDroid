@@ -28,8 +28,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:textColor="@color/black"
-        android:fontFamily="@font/montserrat_family"
-        android:textFontWeight="400"
+        android:fontFamily="@font/montserrat_regular"
         android:textSize="14dp"
         android:text="@string/permission_alert_desc"/>
 
@@ -49,11 +48,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_family"
+            android:fontFamily="@font/montserrat_regular"
             android:textColor="@color/black"
             android:layout_centerInParent="true"
             android:text="@string/open_setting"
-            android:textFontWeight="400"
             android:textSize="12dp"/>
     </RelativeLayout>
 
@@ -74,11 +72,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_family"
+            android:fontFamily="@font/montserrat_regular"
             android:textColor="@color/black"
             android:layout_centerInParent="true"
             android:text="@string/exit"
-            android:textFontWeight="400"
             android:textSize="12dp"/>
     </RelativeLayout>
 

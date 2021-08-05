@@ -27,8 +27,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="18dp"
-        android:fontFamily="@font/montserrat_family"
-        android:textFontWeight="600"
+        android:fontFamily="@font/montserrat_semibold"
         android:textSize="14dp"
         android:text="@string/name"/>
 

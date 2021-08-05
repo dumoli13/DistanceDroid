@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?attr/fullscreenBackgroundColor"
+    android:background="?attr/colorHomeBodyLayout"
     android:theme="@style/ThemeOverlay.DistanceDroid.FullscreenContainer"
     tools:context=".view.activity.MainActivity">
 
@@ -23,7 +23,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/layout_bottom"
-        android:background="@drawable/bg_round_top_bright">
+        android:background="@drawable/bg_round_bottom">
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideVer125"
             android:layout_width="wrap_content"
@@ -147,8 +147,7 @@
             app:layout_constraintTop_toTopOf="@id/guideHor15"
             app:layout_constraintBottom_toBottomOf="@id/guideHor15"
             android:textColor="@color/black"
-            android:fontFamily="@font/montserrat_family"
-            android:textFontWeight="400"
+            android:fontFamily="@font/montserrat_regular"
             android:textSize="24dp"
             android:text="@string/app_name"/>
         <LinearLayout
@@ -168,10 +167,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:fontFamily="@font/montserrat_family"
+                android:fontFamily="@font/montserrat_bold"
                 android:text="0"
                 android:textColor="@color/black"
-                android:textFontWeight="700"
                 android:textSize="28dp" />
 
             <TextView
@@ -180,8 +178,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@color/black_overlay"
-                android:fontFamily="@font/montserrat_family"
-                android:textFontWeight="400"
+                android:fontFamily="@font/montserrat_regular"
                 android:textSize="12dp"
                 android:text="@string/device_detected"/>
         </LinearLayout>
@@ -242,15 +239,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
-                        android:fontFamily="@font/montserrat_family"
-                        android:textFontWeight="600"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:textSize="12dp"
                         android:text="@string/bluetooth"/>
                     <TextView
                         android:id="@+id/tv_bluetooth_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat_family"
+                        android:fontFamily="@font/montserrat_regular"
                         android:textColor="@color/black_overlay"
                         android:textSize="10dp"
                         android:text="@string/connected"/>
@@ -279,176 +275,19 @@
             android:clickable="true"
             android:focusable="true"
             android:background="@drawable/bg_yellow_selector">
+
             <TextView
                 android:id="@+id/btn_get_paired"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:fontFamily="@font/montserrat_regular"
                 android:padding="12dp"
+                android:text="@string/connect_to_device"
                 android:textColor="@color/black"
-                android:text="@string/connect_to_device"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_saturation"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:background="@drawable/bg_round_honey_dew"
-            app:layout_constraintLeft_toRightOf="@id/layout_bluetooth"
-            app:layout_constraintRight_toLeftOf="@id/layout_heartbeat"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layout_saturation_inside_top"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/iv_saturation"
-                    android:layout_width="24dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_saturation"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-                <LinearLayout
-                    android:id="@+id/layout_saturation_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    app:layout_constraintLeft_toRightOf="@id/iv_saturation"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/tv_saturation_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/montserrat_family"
-                        android:textFontWeight="600"
-                        android:textSize="12dp"
-                        android:text="@string/saturation"/>
-                    <TextView
-                        android:id="@+id/tv_saturation_description"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat_family"
-                        android:textColor="@color/black_overlay"
-                        android:textSize="10dp"
-                        android:text="@string/sp02"/>
-                </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="106dp"
-                android:layout_height="32dp"
-                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_saturation_inside_top"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:background="@drawable/bg_round_grey">
-
-                <TextView
-                    android:id="@+id/tv_saturation_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_family"
-                    android:text="@string/unavailable"
-                    android:textColor="@color/black"
-                    android:textFontWeight="600"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_heartbeat"
-            android:visibility="gone"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:background="@drawable/bg_round_honey_dew"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layout_heartbeat_inside_top"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/iv_heartbeat"
-                    android:layout_width="24dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_heartbeat"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-                <LinearLayout
-                    android:id="@+id/layout_heartbeat_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    app:layout_constraintLeft_toRightOf="@id/iv_heartbeat"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/tv_heartbeat_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/montserrat_family"
-                        android:textFontWeight="600"
-                        android:textSize="12dp"
-                        android:text="@string/heartbeat"/>
-                    <TextView
-                        android:id="@+id/tv_heartbeat_description"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat_family"
-                        android:textColor="@color/black_overlay"
-                        android:textSize="10dp"
-                        android:text="@string/bpm"/>
-                </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="106dp"
-                android:layout_height="32dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_heartbeat_inside_top"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:background="@drawable/bg_round_grey">
-                <TextView
-                    android:id="@+id/tv_heartbeat_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:fontFamily="@font/montserrat_family"
-                    android:textFontWeight="600"
-                    android:textColor="@color/black"
-                    android:text="@string/unavailable"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

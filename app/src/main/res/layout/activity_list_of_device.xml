@@ -23,8 +23,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginStart="6dp"
-            android:fontFamily="@font/montserrat_family"
-            android:textFontWeight="600"
+            android:fontFamily="@font/montserrat_semibold"
             android:textSize="16dp"
             android:text="@string/on"
             android:textColor="@color/white"/>
@@ -62,7 +61,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:padding="16dp"
-                    android:fontFamily="@font/montserrat_family"
+                    android:fontFamily="@font/montserrat_regular"
                     android:textSize="16dp"
                     android:text="@string/bluetooth_list_desc"/>
 
@@ -73,7 +72,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_description"
                     android:padding="16dp"
-                    android:fontFamily="@font/montserrat_family"
+                    android:fontFamily="@font/montserrat_regular"
                     android:textSize="16dp"
                     android:text="@string/list_paired_device"/>
 
@@ -92,7 +91,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rv_paired_device"
                     android:padding="16dp"
-                    android:fontFamily="@font/montserrat_family"
+                    android:fontFamily="@font/montserrat_regular"
                     android:textSize="16dp"
                     android:text="@string/list_available_device"/>
 
@@ -119,7 +118,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:padding="16dp"
-                    android:fontFamily="@font/montserrat_family"
+                    android:fontFamily="@font/montserrat_regular"
                     android:textSize="16dp"
                     android:text="@string/bluetooth_off_desc1"/>
             </androidx.constraintlayout.widget.ConstraintLayout>

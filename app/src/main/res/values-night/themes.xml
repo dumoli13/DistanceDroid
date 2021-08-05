@@ -12,6 +12,9 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">@color/black</item>
         <!-- Customize your theme here. -->
+        <item name="colorHomeBodyLayout">@color/library7</item>
+        <item name="colorBodyLayout">@color/library7</item>
+        <item name="colorBodyCardLayout">@color/black</item>
     </style>
 
     <style name="ThemeOverlay.DistanceDroid.FullscreenContainer" parent="">

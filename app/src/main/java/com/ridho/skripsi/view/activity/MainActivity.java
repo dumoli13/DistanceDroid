@@ -1,6 +1,7 @@
 package com.ridho.skripsi.view.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -8,11 +9,15 @@ import androidx.constraintlayout.widget.Guideline;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanResult;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -76,28 +81,7 @@ public class MainActivity extends AppCompatActivity {
         layoutGetPaired = findViewById(R.id.layout_get_paired);
         layoutGetPaired.setOnClickListener(getPairedListener);
 
-        layoutSaturation = findViewById(R.id.layout_saturation);
-        layoutHeartBeat = findViewById(R.id.layout_heartbeat);
-
         tvBluetoothDescription = findViewById(R.id.tv_bluetooth_description);
-
-        tvSaturationValue = findViewById(R.id.tv_saturation_value);
-        tvSaturationValue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message = "spo2:" + System.currentTimeMillis();
-                bluetoothUtil.write(message.getBytes());
-            }
-        });
-
-        tvHeartbeatValue = findViewById(R.id.tv_heartbeat_value);
-        tvHeartbeatValue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message = "bpm:"+ System.currentTimeMillis();
-                bluetoothUtil.write(message.getBytes());
-            }
-        });
 
         layoutBleCount = findViewById(R.id.layout_ble_count);
         layoutBleCount.setOnClickListener(bluetoothCountClickListener);
@@ -122,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
             setupBluetoothBroadcast();
             bluetoothUtil = new BluetoothUtil(this, handler);
         }
+
+//        activateBleScanner();
     }
 
     @Override
@@ -273,11 +259,11 @@ public class MainActivity extends AppCompatActivity {
                 int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
                 double distance = calcBleDistance(rssi);
                 if(distance < BLE_MAX_DISTANCE){
-                    if(showNotif && distance <= SHOW_NOTIF_DISTANCE){
-                        showNotif = false;
-                        UserNotificationManager.showErrorNotification(getApplicationContext(), getString(R.string.distance_alert_body));
-                        UserNotificationManager.showDistanceDialog(MainActivity.this, Constant.ALERT_DISTANCE_WARNING, device.getName());
-                    }
+//                    if(showNotif && distance <= SHOW_NOTIF_DISTANCE){
+//                        showNotif = false;
+//                        UserNotificationManager.showErrorNotification(getApplicationContext(), getString(R.string.distance_alert_body));
+//                        UserNotificationManager.showDistanceDialog(MainActivity.this, Constant.ALERT_DISTANCE_WARNING, device.getName());
+//                    }
                     int color = Constant.COLOR_LIBRARY[deviceMap.size() % Constant.COLOR_LIBRARY.length];
                     NearbyBluetoothModel nearbyBluetoothModel = new NearbyBluetoothModel(device.getName(), device.getAddress(), distance, color);
                     deviceMap.put(device.getAddress(), nearbyBluetoothModel);
@@ -410,4 +396,21 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     });
+
+
+    private void activateBleScanner(){BluetoothLeScanner bleScanner = bluetoothAdapter.getBluetoothLeScanner();
+        bleScanner.startScan(new ScanCallback() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onScanResult(int callbackType, ScanResult result) {
+                super.onScanResult(callbackType, result);
+
+                Log.d(TAG, "onScanResult: getDeviceName: " + result.getDevice().getName());
+                Log.d(TAG, "onScanResult: getDeviceAddress: " + result.getDevice().getAddress());
+                Log.d(TAG, "onScanResult: getRssi: " + result.getRssi());
+                Log.d(TAG, "onScanResult: getTxPower: " + result.getTxPower());
+                Log.d(TAG, "---------------------------------------------------------------------");
+            }
+        });
+    }
 }
