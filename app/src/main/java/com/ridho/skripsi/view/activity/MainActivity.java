@@ -42,6 +42,7 @@ import static com.ridho.skripsi.utility.Constant.MESSAGE_READ;
 import static com.ridho.skripsi.utility.Constant.MESSAGE_STATE_CHANGED;
 import static com.ridho.skripsi.utility.Constant.MESSAGE_TOAST;
 import static com.ridho.skripsi.utility.Constant.MESSAGE_WRITE;
+import static com.ridho.skripsi.utility.Constant.SHOW_NOTIF_DISTANCE;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -272,11 +273,11 @@ public class MainActivity extends AppCompatActivity {
                 int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
                 double distance = calcBleDistance(rssi);
                 if(distance < BLE_MAX_DISTANCE){
-//                    if(showNotif){
-//                        showNotif = false;
-//                        UserNotificationManager.showErrorNotification(getApplicationContext(), getString(R.string.distance_alert_body));
-//                        UserNotificationManager.showDistanceDialog(MainActivity.this, Constant.ALERT_DISTANCE_WARNING, device.getName());
-//                    }
+                    if(showNotif && distance <= SHOW_NOTIF_DISTANCE){
+                        showNotif = false;
+                        UserNotificationManager.showErrorNotification(getApplicationContext(), getString(R.string.distance_alert_body));
+                        UserNotificationManager.showDistanceDialog(MainActivity.this, Constant.ALERT_DISTANCE_WARNING, device.getName());
+                    }
                     int color = Constant.COLOR_LIBRARY[deviceMap.size() % Constant.COLOR_LIBRARY.length];
                     NearbyBluetoothModel nearbyBluetoothModel = new NearbyBluetoothModel(device.getName(), device.getAddress(), distance, color);
                     deviceMap.put(device.getAddress(), nearbyBluetoothModel);
