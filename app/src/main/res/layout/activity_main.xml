@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:id="@+id/layout_top_on"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -23,175 +23,13 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/layout_bottom"
+        android:padding="12dp"
         android:background="@drawable/bg_round_bottom">
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideVer125"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.125" />
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideVer25"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.25" />
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideVer375"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.375" />
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideVer45"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.45" />
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideVer55"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.55" />
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideVer625"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.625" />
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideVer75"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.75" />
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideVer875"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.875" />
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideHor15"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.05" />
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideHor925"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.9" />
-        <ImageView
-            android:id="@+id/iv_radius_four"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:alpha="0.1"
-            android:src="@drawable/ic_circle_red"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <ImageView
-            android:id="@+id/iv_radius_three"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:alpha="0.2"
-            android:src="@drawable/ic_circle_red"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="@id/guideVer125"
-            app:layout_constraintRight_toRightOf="@id/guideVer875"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <ImageView
-            android:id="@+id/iv_radius_two"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:alpha="0.2"
-            android:src="@drawable/ic_circle_red"
-            app:layout_constraintLeft_toLeftOf="@id/guideVer25"
-            app:layout_constraintRight_toRightOf="@id/guideVer75"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <ImageView
-            android:id="@+id/iv_radius_one"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:alpha="0.2"
-            android:src="@drawable/ic_circle_red"
-            app:layout_constraintLeft_toLeftOf="@id/guideVer375"
-            app:layout_constraintRight_toRightOf="@id/guideVer625"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-        <ImageView
-            android:id="@+id/iv_center"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintLeft_toLeftOf="@id/guideVer45"
-            app:layout_constraintRight_toRightOf="@id/guideVer55"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:src="@drawable/center_green"/>
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/guideHor15"
-            app:layout_constraintBottom_toBottomOf="@id/guideHor15"
-            android:textColor="@color/black"
-            android:fontFamily="@font/montserrat_regular"
-            android:textSize="24dp"
-            android:text="@string/app_name"/>
-        <LinearLayout
-            android:id="@+id/layout_ble_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/guideHor925"
-            app:layout_constraintBottom_toBottomOf="@id/guideHor925"
-            android:focusable="true"
-            android:clickable="true"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tv_ble_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="@font/montserrat_bold"
-                android:text="0"
-                android:textColor="@color/black"
-                android:textSize="28dp" />
-
-            <TextView
-                android:id="@+id/tv_ble_count_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textColor="@color/black_overlay"
-                android:fontFamily="@font/montserrat_regular"
-                android:textSize="12dp"
-                android:text="@string/device_detected"/>
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_for_radius"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/layout_bottom"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_devices"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </ScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_bottom"

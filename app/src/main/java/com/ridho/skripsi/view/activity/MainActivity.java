@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.constraintlayout.widget.Guideline;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -16,23 +18,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ridho.skripsi.R;
 import com.ridho.skripsi.model.NearbyBluetoothModel;
-import com.ridho.skripsi.model.BluetoothModel;
 import com.ridho.skripsi.utility.Commons;
 import com.ridho.skripsi.utility.Constant;
 import com.ridho.skripsi.utility.UserNotificationManager;
-import com.ridho.skripsi.view.dialog.DeviceBottomSheetDialog;
+import com.ridho.skripsi.view.adapter.NearbyDeviceAdapter;
+import com.ridho.skripsi.view.adapter.PairedDeviceAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,16 +46,21 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "DOMS MainActivity";
     private static final int pairedDeviceRequestCode = 100;
 
-    private LinearLayout layoutBleCount;
-    private ConstraintLayout layoutTopOn,layoutTopOff, layoutBottom, layoutForRadius, layoutGetPaired, layoutSaturation, layoutHeartBeat;
-    private TextView tvBluetoothDescription, tvSaturationValue, tvHeartbeatValue, tvBleCount;
+    private ConstraintLayout layoutTopOff, layoutBottom, layoutGetPaired;
+    private ScrollView layoutTopOn;
+    private TextView tvBluetoothDescription;
     private ImageView ivBluetoothSwitch1, ivBluetoothSwitch2;
-    private DeviceBottomSheetDialog deviceBottomSheetDialog;
+
+
+
+
+    private RecyclerView deviceList;
+    private NearbyDeviceAdapter nearbyDeviceAdapter;
+
 
     private static MainActivity instance;
     private BluetoothAdapter bluetoothAdapter;
     private Map<String, NearbyBluetoothModel> deviceMap = new HashMap<>();
-    private BluetoothModel bluetoothModel;
 
     private boolean showNotif = true;
 
@@ -64,18 +70,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         instance = this;
 
+        nearbyDeviceAdapter = new NearbyDeviceAdapter(deviceMap);
+        deviceList = findViewById(R.id.rv_devices);
+        deviceList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        deviceList.setAdapter(nearbyDeviceAdapter);
+
         layoutTopOn = findViewById(R.id.layout_top_on);
         layoutTopOff = findViewById(R.id.layout_top_off);
         layoutBottom = findViewById(R.id.layout_bottom);
-        layoutForRadius = findViewById(R.id.layout_for_radius);
         layoutGetPaired = findViewById(R.id.layout_get_paired);
         layoutGetPaired.setOnClickListener(getPairedListener);
 
         tvBluetoothDescription = findViewById(R.id.tv_bluetooth_description);
-
-        layoutBleCount = findViewById(R.id.layout_ble_count);
-        layoutBleCount.setOnClickListener(bluetoothCountClickListener);
-        tvBleCount = findViewById(R.id.tv_ble_count);
 
         ivBluetoothSwitch1 = findViewById(R.id.iv_bluetooth_switch1);
         ivBluetoothSwitch1.setOnClickListener(bluetoothSwitchClickListener);
@@ -125,10 +131,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static MainActivity getInstace(){
-        return instance;
-    }
-
     private void setupBluetoothBroadcast(){
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -144,19 +146,6 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(bluetoothDiscoveryBrodcastReceiver, discoverDeviceFilter);
     }
 
-    public void updateBleCount() {
-        MainActivity.this.runOnUiThread(new Runnable() {
-            public void run() {
-                tvBleCount.setText(String.valueOf(deviceMap.size()));
-
-                String[] keys = deviceMap.keySet().toArray(new String[0]);
-                layoutForRadius.removeAllViewsInLayout();
-                for(int i=0; i<keys.length; i++){
-                    setDevice((float) deviceMap.get(keys[i]).getDistance(), deviceMap.get(keys[i]).getColor());
-                }
-            }
-        });
-    }
 
     View.OnClickListener bluetoothSwitchClickListener = new View.OnClickListener() {
         @Override
@@ -172,14 +161,6 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(discoveryIntent);
                 }
             }
-        }
-    };
-
-    View.OnClickListener bluetoothCountClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            deviceBottomSheetDialog = new DeviceBottomSheetDialog(MainActivity.this, deviceMap);
-            deviceBottomSheetDialog.show();
         }
     };
 
@@ -243,30 +224,23 @@ public class MainActivity extends AppCompatActivity {
                     int color = Constant.COLOR_LIBRARY[deviceMap.size() % Constant.COLOR_LIBRARY.length];
                     NearbyBluetoothModel nearbyBluetoothModel = new NearbyBluetoothModel(device.getName(), device.getAddress(), distance, color);
                     deviceMap.put(device.getAddress(), nearbyBluetoothModel);
+                    Log.d(TAG, "onReceive: device map size " + deviceMap.size());
+                    nearbyDeviceAdapter.updateList(deviceMap);
                 }
                 else Toast.makeText(getApplicationContext(), device.getName()+" distance= " + distance, Toast.LENGTH_SHORT).show();
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 deviceMap.clear();
                 showNotif = true;
-                layoutForRadius.removeAllViewsInLayout();
                 bluetoothAdapter.startDiscovery();
             }
-            MainActivity.getInstace().updateBleCount();
         }
     };
 
-
-    private void setViewBluetoothOff(){
-        tvBluetoothDescription.setText(getString(R.string.off));
-        ivBluetoothSwitch1.setImageResource(R.drawable.ic_switch_off);
-    }
     private void setViewBluetoothOn(){
         tvBluetoothDescription.setText(getString(R.string.on));
-        ivBluetoothSwitch1.setImageResource(R.drawable.ic_switch_on);
     }
     private void setViewBluetoothConnected(){
         tvBluetoothDescription.setText(getString(R.string.connected));
-        ivBluetoothSwitch1.setImageResource(R.drawable.ic_switch_on);
     }
 
     private void showMainMenu(boolean isVisible){
@@ -274,54 +248,15 @@ public class MainActivity extends AppCompatActivity {
             layoutTopOn.setVisibility(View.VISIBLE);
             layoutBottom.setVisibility(View.VISIBLE);
             layoutTopOff.setVisibility(View.GONE);
+            ivBluetoothSwitch1.setImageResource(R.drawable.ic_switch_on);
             setViewBluetoothOn();
         } else{
             layoutTopOn.setVisibility(View.GONE);
             layoutBottom.setVisibility(View.GONE);
             layoutTopOff.setVisibility(View.VISIBLE);
-            setViewBluetoothOff();
+            ivBluetoothSwitch1.setImageResource(R.drawable.ic_switch_off);
+            tvBluetoothDescription.setText(getString(R.string.off));
         }
-    }
-
-    private void setDevice(float distance, int color){
-        //Distance <= 0.4 meter considered stick/touch owner so, we made it touch the center's surface
-        float anchor = Math.max(0.125f * distance, 0.05f);
-        Guideline guidelineLeft = getNewGuideline(this, ConstraintLayout.LayoutParams.VERTICAL);
-        guidelineLeft.setId(View.generateViewId());
-        guidelineLeft.setGuidelinePercent(0.5f-anchor);
-        layoutForRadius.addView(guidelineLeft);
-
-        Guideline guidelineRight = getNewGuideline(this, ConstraintLayout.LayoutParams.VERTICAL);
-        guidelineRight.setId(View.generateViewId());
-        guidelineRight.setGuidelinePercent(0.5f+anchor);
-        layoutForRadius.addView(guidelineRight);
-
-        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(0, 0);
-        layoutParams.leftToLeft = guidelineLeft.getId();
-        layoutParams.rightToRight = guidelineRight.getId();
-        layoutParams.topToTop = ConstraintSet.PARENT_ID;
-        layoutParams.bottomToBottom = ConstraintSet.PARENT_ID;
-        layoutParams.dimensionRatio = "1:1";
-
-        ImageView imageView = new ImageView(getApplicationContext());
-        imageView.setId(View.generateViewId());
-        imageView.setBackgroundResource(R.drawable.circle_blue_outer);
-        imageView.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(color)));
-        imageView.setLayoutParams(layoutParams);
-        layoutForRadius.addView(imageView);
-
-    }
-
-    private Guideline getNewGuideline(Context context, int orientation) {
-        Guideline guideline = new Guideline(context);
-        guideline.setId(Guideline.generateViewId());
-        ConstraintLayout.LayoutParams lp =
-                new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT);
-        lp.orientation = orientation;
-        guideline.setLayoutParams(lp);
-
-        return guideline;
     }
 
     private void activateBleScanner(){BluetoothLeScanner bleScanner = bluetoothAdapter.getBluetoothLeScanner();
